@@ -1,8 +1,13 @@
-using ProyectoBackend;
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using ProyectoBackend;//Importa el namespace de la clase Repository
+var builder = WebApplication.CreateBuilder(args);//Crea la aplicacion
+var app = builder.Build();//Crea la aplicacion
 
 app.MapGet("/", () => "Hello World!");
-app.MapGet("/brewery", () => new Repository().GetBreweries());
+app.MapGet("/brewery", () => new Repository().GetBreweries()); //Llama al metodo GetBreweries de la clase Repository para obtener la lista de cervecerias
+app.MapGet("/brewery/{id}", (int id) =>   //Devuelve la cerveceria con el ID que se le pasa por parametro, verifica que el dato no sea nulo
+{
 
-app.Run();
+    var brewery = new Repository().GetBrewery(id); //obtiene la cerveceria con el ID que se le pasa por parametro
+    return brewery is not null ? Results.Ok(brewery) : Results.NotFound();//Si la cerveceria no es nula devuelve la cerveceria, si es nula devuelve un error 404
+});
+app.Run(); //Ejecuta la aplicacion
