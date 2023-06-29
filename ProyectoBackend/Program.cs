@@ -25,16 +25,16 @@ app.MapPost("/beer", (PubContext db, Beer beer) => //Agrega una cerveza a la bas
 
 app.MapPut("/beers/{id}", async (int id, PubContext db, Beer beerRequest) =>
 {
-    var beer = await db.Beers.FindAsync(id); //
+    var beer = await db.Beers.FindAsync(id); //Obtiene la cerveza de forma asincrona
 
-    if (beer is null) return Results.NotFound();
+    if (beer is null) return Results.NotFound(); //Retorna not found si es null
 
-    beer.Name = beerRequest.Name;
+    beer.Name = beerRequest.Name;   //Actualiza los datos
     beer.BrandId = beerRequest.BrandId;
 
-    await db.SaveChangesAsync();
+    await db.SaveChangesAsync(); //Guarda los datos
 
-    return Results.NoContent();
+    return Results.NoContent(); //No regresa nada
 });
 
 app.MapDelete("/beers/{id}", async (int id, PubContext db) =>
