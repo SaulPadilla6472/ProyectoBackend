@@ -16,5 +16,11 @@ app.MapGet("/brewery/{id}", (int id) =>   //Devuelve la cerveceria con el ID que
 
 app.MapGet("/beers", (PubContext db) => db.Beers.ToList()); //Devuelve la lista de cervezas
 
+app.MapPost("/beer", (PubContext db, Beer beer) => //Agrega una cerveza a la base de datos
+{
+    db.Beers.Add(beer); //Agrega la cerveza
+    db.SaveChanges();//Guarda los cambios en la bd
+    return Results.Created($"/beer/{beer.BeerId}", beer); //Para acceder a la informacion del registro
+});
 
 app.Run(); //Ejecuta la aplicacion
