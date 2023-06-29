@@ -23,4 +23,28 @@ app.MapPost("/beer", (PubContext db, Beer beer) => //Agrega una cerveza a la bas
     return Results.Created($"/beer/{beer.BeerId}", beer); //Para acceder a la informacion del registro
 });
 
+app.MapPut("/beers/{id}", async (int id, PubContext db, Beer beerRequest) =>
+{
+    var beer = await db.Beers.FindAsync(id); //
+
+    if (beer is null) return Results.NotFound();
+
+    beer.Name = beerRequest.Name;
+    beer.BrandId = beerRequest.BrandId;
+
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+});
+
+app.MapDelete("/beers/{id}", async (int id, PubContext db) =>
+{
+    var beer = await db.Beers.FindAsync(id);
+    if (beer is null) return Results.NotFound();
+
+    db.Beers.Remove(beer);
+    await db.SaveChangesAsync();
+    return Results.Ok(beer);
+});
+
 app.Run(); //Ejecuta la aplicacion
